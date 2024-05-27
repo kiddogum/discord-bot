@@ -3,15 +3,20 @@ const { weatherAPI } = require("../../config.json");
 const axios = require("axios");
 
 module.exports = {
+  //setting the command name
   data: new SlashCommandBuilder()
     .setName("weather")
     .setDescription("View the weather for your chosen area")
+
+    //setting the command options
     .addStringOption((option) =>
       option
         .setName("city")
         .setDescription("The chosen area's weather to show")
         .setRequired(true)
     ),
+
+  //execute the command
   async execute(interaction) {
     const city = interaction.options.getString("city");
 
@@ -20,6 +25,7 @@ module.exports = {
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherAPI}`
       );
 
+      //making an embed message template
       const weatherEmbed = new EmbedBuilder()
         .setColor(0x0099ff)
         .setTitle(`${res.data.name} Weather:`)
@@ -46,6 +52,7 @@ module.exports = {
         .setTimestamp()
         .setFooter({ text: `sources by: OpenWeather` });
 
+      //returning the embed reply to command
       return await interaction.reply({ embeds: [weatherEmbed] });
     } catch (error) {
       console.error(error);
